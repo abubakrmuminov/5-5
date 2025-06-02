@@ -1,9 +1,21 @@
 const elForm = document.getElementById("form");
 const elTodos = document.getElementById("todos");
+const themeToggle = document.getElementById("theme-toggle");
 
-const addSound = new Audio("../sounds/brosok-odnoy-monetki-v-obschuyu-kuchu.mp3");
+const addSound = new Audio(
+  "../sounds/brosok-odnoy-monetki-v-obschuyu-kuchu.mp3"
+);
 const statusSound = new Audio("../sounds/zvuk-odnoy-kapelki.mp3");
 const deleteSound = new Audio("../sounds/zvuk-perelistyivaniya-stranitsyi.mp3");
+
+let currentTheme = localStorage.getItem("theme") || "light";
+document.documentElement.setAttribute("data-theme", currentTheme);
+
+themeToggle.addEventListener("click", () => {
+  currentTheme = currentTheme === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  localStorage.setItem("theme", currentTheme);
+});
 
 let todos = JSON.parse(localStorage.getItem("todos")) || [
   { id: 1, title: "shlem olish", status: true },
@@ -17,7 +29,7 @@ function handleSubmit(e) {
   e.preventDefault();
   addSound.play();
 
-  const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+  const newId = todos.length > 0 ? Math.max(...todos.map((t) => t.id)) + 1 : 1;
   const newTodo = {
     title: e.target[0].value,
     id: newId,
@@ -33,7 +45,8 @@ function uiUpdater(todos) {
   if (todos.length > 0) {
     todos.forEach(({ title, id, status }) => {
       const li = document.createElement("li");
-      li.className = "card bg-base-100 shadow-md p-4 flex justify-between items-center";
+      li.className =
+        "card bg-base-100 shadow-md p-4 flex justify-between items-center";
 
       const h3 = document.createElement("h3");
       h3.className = "font-semibold";
